@@ -74,6 +74,7 @@ char* Result(HWND hwnd)
 			if (n2 == 0) {
 				std::string a = { "Error, nie podziele przez 0" };
 				result = (char*)(a.c_str());
+				break;
 			}
 			_itoa(n1 / n2, result, 10);
 			break;
@@ -90,21 +91,25 @@ char* Result(HWND hwnd)
 int leftnum(std::string text, int z)
 {
 	int i = 0;
-	std::string t(text),num;
+	std::string t(text);
 	for (i = z-1; i > 0; i--) {
 		if (!isdigit(text[i])) break;
 	}
-	num = t.erase(i, z - i);
-	return atoi(num.c_str());
+	if (i < 0)i = 0;
+	t.erase(0,i);
+	t.erase(z,text.length()-z);
+	return atoi(t.c_str());
 }
 
 int rigthnum(std::string text , int z )
 {
 	int i = 0;
-	std::string t(text), num;
+	std::string t(text);
 	for (i = z + 1 ; i < text.length(); i++) {
 		if (!isdigit(text[i])) break;
 	}
-	num = t.erase(z, i);
-	return atoi(num.c_str());
+	if (i >text.length()-1)i = text.length()-z-1;
+	t.erase(0, z+1);
+	t.erase(i,t.length()-i);
+	return atoi(t.c_str());
 }

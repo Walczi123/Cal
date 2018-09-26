@@ -2,13 +2,13 @@
 #include "Functions.h"
 
 LPSTR NazwaKlasy = "Main Window";
-MSG Komunikat;
+MSG Komunikat;LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 HWND BPlus, BMinus,BMult, BDiv, BEqual, p1, p2, p3, p4, p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20,p21,p22,p23,p24,p25,p26, p27, p28, p29, p30, p31, p32, p33, p34, p35, p36, p37, p38;
 HWND BClear, BClearAll,B_0, B_1, B_2, B_3, B_4, B_5, B_6, B_7, B_8, B_9,B_pi,B_e;
 HWND MainText, ResultText;
 HANDLE hOut;
 
-LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -56,12 +56,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ResultText = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE , 107, 74, 308, 25, hwnd, (HMENU)ID_TResult, hInstance, NULL);
 	SendMessage(MainText, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), (LPARAM)true);
 
-	SetWindowText(MainText, "Wpisz tu coś");
-	DWORD dlugosc = GetWindowTextLength(MainText);
-	LPSTR Bufor = (LPSTR)GlobalAlloc(GPTR, dlugosc + 1);
-	GetWindowText(MainText, Bufor, dlugosc + 1);
-
-
+	//SetWindowText(MainText, "Wpisz tu coś");
+	
 	//Buttons
 	int Bwide = 51, Bhight = 45;
 	int level1 = 106, level2 = level1 + Bhight, level3 = level2 + Bhight, level4 = level3 + Bhight, level5 = level4 + Bhight;
@@ -119,8 +115,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		TranslateMessage(&Komunikat);
 		DispatchMessage(&Komunikat);
 	}
-
-	GlobalFree(Bufor);
+		
 	return Komunikat.wParam;
 }
 
@@ -148,7 +143,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			AddWindowText(MainText, "/"); break;
 		case ID_BEqual:
 			result = Result(MainText);
-			SetWindowText(ResultText, result); break;
+			SetWindowText(ResultText, result);break;
 		case ID_BClear:
 			LessWindowText(MainText); break;
 		case ID_BClearAll:
