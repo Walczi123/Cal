@@ -87,24 +87,36 @@ void NullWindowText(HWND h1, HWND h2)
 //	return result;
 //}
 
-std::string rigthnum(std::string text, int z)
+std::string leftnum(std::string text, int z)
 {
-	int i = 0;
-	std::string t(text);
-	for (i = z-1; i > 0; i--) {
-		if (!isdigit(text[i])) break;
+	std::string t="";
+	if (z != 0) {
+		int i = 0;
+		t = text;
+		for (i = z - 1; i >= 0; i--) {
+			if (!isdigit(text[i])) break;
+		}
+		if (i < 0)i = 0;
+		t.erase(0, i);
+		t.erase(z - i, t.length() - 1);
 	}
-	return t.erase(i+1, z - i-1);
+	return t;
 }
 
-std::string leftnum(std::string text , int z )
+std::string rigthnum(std::string text , int z )
 {
-	int i = 0;
-	std::string t(text);
-	for (i = z + 1 ; i < text.length(); i++) {
-		if (!isdigit(text[i])) break;
+	std::string t="";
+	if (z != text.length() - 1){
+		int i = 0;
+		t = text;
+		for (i = z + 1; i < text.length() - 1; i++) {
+			if (!isdigit(text[i])) break;
+		}
+		if (i > text.length() - 1)i = text.length() - 1;
+		t.erase(0, z + 1);
+		t.erase(0, i);
 	}
-	return t.erase(z, i);
+	return t;
 }
 
 void ONP(HWND hwnd)
@@ -113,20 +125,19 @@ void ONP(HWND hwnd)
 	LPSTR buffer = (LPSTR)GlobalAlloc(GPTR, length + 1);
 	GetWindowText(hwnd, buffer, length + 1);
 	std::string write(buffer), line, n1, n2;
-	std::string l[100];
+	std::string l[100]; //v
 	GlobalFree(buffer);
-	for (i = 0; write.length() >= 0; i++) {
-		if (write[i] == '+') {
+	for (i = 0; write.length() >= 0 && i<write.length()-1; i++) {
+		n1 = ""; n2 = "";
+		if (write[i] == '+') {		
 			n1 = leftnum(write, i);
 			n2 = rigthnum(write, i);
 			write.erase(i - n1.length(), n1.length() + n2.length() + 1);
-			l[k++] = n1;
-			l[k++] = n2;
+			if(!n1.empty())l[k++] = n1;
+			if(!n2.empty())l[k++] = n2;
 			l[k++] = "+";
-			i = 0;
-			break;
-		}
-		else {
+			i = -1;
+		}else {
 			if (write[i] == '-') {
 				n1 = leftnum(write, i);
 				n2 = rigthnum(write, i);
@@ -134,10 +145,8 @@ void ONP(HWND hwnd)
 				l[k++] = n1;
 				l[k++] = n2;
 				l[k++] = "-";
-				i = 0;
-				break;
-			}
-			else {
+				i = -1;
+			}else {
 				if (write[i] == '*') {
 					n1 = leftnum(write, i);
 					n2 = rigthnum(write, i);
@@ -145,22 +154,20 @@ void ONP(HWND hwnd)
 					l[k++] = n1;
 					l[k++] = n2;
 					l[k++] = "*";
-					i = 0;
-					break;
-				}
-				else {
+					i = -1;
+				}else {
 					if (write[i] == '/') {
 						n1 = leftnum(write, i);
 						n2 = rigthnum(write, i);
 						l[k++] = n1;
 						l[k++] = n2;
 						l[k++] = "/";
-						i = 0;
-						break;
+						i = -1;
 					}
 				}
 			}
 		}
 	}
-	
+
+	return;
 }

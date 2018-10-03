@@ -27,7 +27,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wc.lpszMenuName = NULL;
 	wc.lpszClassName = NazwaKlasy;
-	wc.hIconSm = LoadIcon(NULL, IDI_APPLICATION);\
+	wc.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
 
 	// REJESTROWANIE KLASY OKNA
 	if (!RegisterClassEx(&wc))
@@ -55,12 +55,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	MainText = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_AUTOVSCROLL | WS_VSCROLL, 7, 7, 408, 60, hwnd, (HMENU)ID_TMain, hInstance, NULL);
 	ResultText = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE , 107, 74, 308, 25, hwnd, (HMENU)ID_TResult, hInstance, NULL);
 	SendMessage(MainText, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), (LPARAM)true);
-
-	SetWindowText(MainText, "Wpisz tu coś");
-	DWORD dlugosc = GetWindowTextLength(MainText);
-	LPSTR Bufor = (LPSTR)GlobalAlloc(GPTR, dlugosc + 1);
-	GetWindowText(MainText, Bufor, dlugosc + 1);
-
 
 	//Buttons
 	int Bwide = 51, Bhight = 45;
@@ -120,7 +114,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		DispatchMessage(&Komunikat);
 	}
 
-	GlobalFree(Bufor);
 	return Komunikat.wParam;
 }
 
@@ -149,7 +142,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		case ID_BEqual:
 			ONP(MainText);
 			//result = Result(MainText);
-			SetWindowText(ResultText, result); break;
+			//SetWindowText(ResultText, result); break;
 		case ID_BClear:
 			LessWindowText(MainText); break;
 		case ID_BClearAll:
