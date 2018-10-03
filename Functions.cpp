@@ -39,77 +39,128 @@ void NullWindowText(HWND h1, HWND h2)
 	return;
 }
 
-char* Result(HWND hwnd)
-{
-	char *result=new char[100];
-	int length = GetWindowTextLength(hwnd), i=0,j=0,last=0,n1,n2,r;
-	LPSTR buffer = (LPSTR)GlobalAlloc(GPTR, length + 1);
-	GetWindowText(hwnd, buffer, length + 1);
-	//char * write = new char[length + 1];
-	std::string write(buffer);
-	std::string num1, num2;
-	GlobalFree(buffer);
-	for (i = 1; i <= length; i++) { 
-		if (write[i]=='+') {
-			n1= leftnum(write,i);
-			n2 = rigthnum(write, i);
-			_itoa(n1+n2, result, 10);
-			break;
-		};
-		if (write[i] == '-') {
-			n1 = leftnum(write, i);
-			n2 = rigthnum(write, i);
-			_itoa(n1 - n2, result, 10);
-			break;
-		};
-		if (write[i] == '*') {
-			n1 = leftnum(write, i);
-			n2 = rigthnum(write, i);
-			_itoa(n1 * n2, result, 10);
-			break;
-		};
-		if (write[i] == '/') {
-			n1 = leftnum(write, i);
-			n2 = rigthnum(write, i);
-			if (n2 == 0) {
-				std::string a = { "Error, nie podziele przez 0" };
-				result = (char*)(a.c_str());
-				break;
-			}
-			_itoa(n1 / n2, result, 10);
-			break;
-		};
-		/*if (!isdigit(write[i])){
-			token[j++]=write.erase(last, i);
-			last = i;
-		}*/
-	}
+//char* Result(HWND hwnd)
+//{
+//	char *result=new char[100];
+//	int length = GetWindowTextLength(hwnd), i=0,j=0,last=0,n1,n2,r;
+//	LPSTR buffer = (LPSTR)GlobalAlloc(GPTR, length + 1);
+//	GetWindowText(hwnd, buffer, length + 1);
+//	//char * write = new char[length + 1];
+//	std::string write(buffer);
+//	std::string num1, num2;
+//	GlobalFree(buffer);
+//	for (i = 1; i <= length; i++) { 
+//		if (write[i]=='+') {
+//			n1= leftnum(write,i);
+//			n2 = rigthnum(write, i);
+//			_itoa(n1+n2, result, 10);
+//			break;
+//		};
+//		if (write[i] == '-') {
+//			n1 = leftnum(write, i);
+//			n2 = rigthnum(write, i);
+//			_itoa(n1 - n2, result, 10);
+//			break;
+//		};
+//		if (write[i] == '*') {
+//			n1 = leftnum(write, i);
+//			n2 = rigthnum(write, i);
+//			_itoa(n1 * n2, result, 10);
+//			break;
+//		};
+//		if (write[i] == '/') {
+//			n1 = leftnum(write, i);
+//			n2 = rigthnum(write, i);
+//			if (n2 == 0) {
+//				std::string a = { "Error, nie podziele przez 0" };
+//				result = (char*)(a.c_str());
+//			}
+//			_itoa(n1 / n2, result, 10);
+//			break;
+//		};
+//		/*if (!isdigit(write[i])){
+//			token[j++]=write.erase(last, i);
+//			last = i;
+//		}*/
+//	}
+//
+//	return result;
+//}
 
-	return result;
-}
-
-int leftnum(std::string text, int z)
+std::string rigthnum(std::string text, int z)
 {
 	int i = 0;
 	std::string t(text);
 	for (i = z-1; i > 0; i--) {
 		if (!isdigit(text[i])) break;
 	}
-	if (i < 0)i = 0;
-	t.erase(0,i);
-	t.erase(z,text.length()-z);
-	return atoi(t.c_str());
+	return t.erase(i+1, z - i-1);
 }
 
-int rigthnum(std::string text , int z )
+std::string leftnum(std::string text , int z )
 {
 	int i = 0;
 	std::string t(text);
 	for (i = z + 1 ; i < text.length(); i++) {
 		if (!isdigit(text[i])) break;
 	}
-	if (i >text.length()-1)i = text.length()-z-1;
-	t.erase(0, z+1);
-	t.erase(i,t.length()-i);
-	return atoi(t.c_str());
+	return t.erase(z, i);
+}
+
+void ONP(HWND hwnd)
+{
+	int length = GetWindowTextLength(hwnd), i = 0, j = 0, k=0;
+	LPSTR buffer = (LPSTR)GlobalAlloc(GPTR, length + 1);
+	GetWindowText(hwnd, buffer, length + 1);
+	std::string write(buffer), line, n1, n2;
+	std::string l[100];
+	GlobalFree(buffer);
+	for (i = 0; write.length() >= 0; i++) {
+		if (write[i] == '+') {
+			n1 = leftnum(write, i);
+			n2 = rigthnum(write, i);
+			write.erase(i - n1.length(), n1.length() + n2.length() + 1);
+			l[k++] = n1;
+			l[k++] = n2;
+			l[k++] = "+";
+			i = 0;
+			break;
+		}
+		else {
+			if (write[i] == '-') {
+				n1 = leftnum(write, i);
+				n2 = rigthnum(write, i);
+				write.erase(i - n1.length(), n1.length() + n2.length() + 1);
+				l[k++] = n1;
+				l[k++] = n2;
+				l[k++] = "-";
+				i = 0;
+				break;
+			}
+			else {
+				if (write[i] == '*') {
+					n1 = leftnum(write, i);
+					n2 = rigthnum(write, i);
+					write.erase(i - n1.length(), n1.length() + n2.length() + 1);
+					l[k++] = n1;
+					l[k++] = n2;
+					l[k++] = "*";
+					i = 0;
+					break;
+				}
+				else {
+					if (write[i] == '/') {
+						n1 = leftnum(write, i);
+						n2 = rigthnum(write, i);
+						l[k++] = n1;
+						l[k++] = n2;
+						l[k++] = "/";
+						i = 0;
+						break;
+					}
+				}
+			}
+		}
+	}
+	
 }

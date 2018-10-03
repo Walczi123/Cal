@@ -8,6 +8,7 @@
 void AddWindowText(HWND, char * text);
 void LessWindowText(HWND);
 void NullWindowText(HWND, HWND);
-char* Result(HWND);
-int leftnum(std::string, int);
-int rigthnum(std::string, int);
+//char* Result(HWND);
+std::string leftnum(std::string, int);
+std::string rigthnum(std::string, int);
+void ONP(HWND);
