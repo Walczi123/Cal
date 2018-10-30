@@ -1,0 +1,6 @@
+#pragma once
+#include"Resource.h"
+
+2503 ICON "icon.ico"
+
+1 24 "manifest.xml"

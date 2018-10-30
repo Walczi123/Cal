@@ -3,12 +3,18 @@
 #include <string>
 #include <windows.h>   
 #include <cmath>
-#include <cctype>
+#include <deque>
+#include <algorithm>
 
-void AddWindowText(HWND, char * text);
+void AddWindowText(HWND, std::string text);
 void LessWindowText(HWND);
 void NullWindowText(HWND, HWND);
-//char* Result(HWND);
-std::string leftnum(std::string, int);
-std::string rigthnum(std::string, int);
-void ONP(HWND);
+unsigned int priority(std::string);
+std::string read_num(std::string);
+std::deque<std::string> ONP(HWND,HWND);
+std::string Result(std::deque<std::string>,HWND);
+std::deque<std::string> ONP(std::string, HWND);
+std::string Ans(HWND);
+double log(double, double);
+double factorial(double);
+
