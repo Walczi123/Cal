@@ -2,15 +2,16 @@
 #include "Functions.h"
 #include "Resource.h"
 
-#include <commctrl.h> 
+//#include <commctrl.h> 
 
 LPSTR NazwaKlasy = "Main Window";
 MSG Komunikat;
 HWND BPlus, BMinus, BMult, BDiv, BEqual, BClear, BClearAll, B_0, B_1, B_2, B_3, B_4, B_5, B_6, B_7, B_8, B_9, B_pi, B_e;
 HWND p_sin, p_cos, p_tan, B_null, B_p2, B_p1, B_p, B_fac, B_log, B_ln, B_riv, B_root, B_sqrt, B_lp, B_rp, B_dot, B_Ans, B_10p;
 HWND MainText, ResultText;
-HANDLE hOut;
-const int cor = 8;
+HFONT MyFont = CreateFont(18, 0, 0, 0, 0, TRUE, 0, 0, 0, 0, 0, 0, 0, "Arial");
+//HANDLE hOut;
+//const int cor = 8;
 //HRGN hrZaokr = CreateRoundRectRgn(10,10 , 442 - cor, 378 - cor, -(2*cor), -(2 * cor));
 
 
@@ -28,7 +29,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	wc.cbWndExtra = 0;
 	wc.hInstance = hInstance;
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wc.hbrBackground = (HBRUSH)(COLOR_BTNFACE + 1); 
+	wc.hbrBackground = (HBRUSH)(COLOR_BTNFACE + 13); 
 	wc.lpszMenuName = NULL;
 	wc.lpszClassName = NazwaKlasy;
 	wc.hIconSm = (HICON)LoadImage(GetModuleHandle(NULL), MAKEINTRESOURCE(2503), IMAGE_ICON, 24, 24, 32);
@@ -37,8 +38,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		// REJESTROWANIE KLASY OKNA
 	if (!RegisterClassEx(&wc))
 	{
-		MessageBox(NULL, "Wysoka Komisja odmawia rejestracji tego okna!", "Niestety...",
-			MB_ICONEXCLAMATION | MB_OK);
+		MessageBox(NULL, "Wysoka Komisja odmawia rejestracji tego okna!", "Niestety...",MB_ICONEXCLAMATION | MB_OK);
 		return 1;
 	}
 
@@ -59,9 +59,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//Text Box
 	MainText = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_AUTOVSCROLL | WS_VSCROLL, 7, 7, 408, 60, hwnd, (HMENU)ID_TMain, hInstance, NULL);
 	ResultText = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE , 107, 74, 308, 25, hwnd, (HMENU)ID_TResult, hInstance, NULL);
-	SendMessage(MainText, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), (LPARAM)true);
-	HFONT MyFont = CreateFont(18, 0, 0, 0, 0, TRUE, 0, 0, 0, 0, 0, 0, 0, "Arial");
+	//SendMessage(MainText, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), (LPARAM)true);
 	SendMessage(MainText, WM_SETFONT, (WPARAM)MyFont, (LPARAM)true);
+	SendMessage(ResultText, WM_SETFONT, (WPARAM)MyFont, (LPARAM)true);
 
 	//Buttons
 	int Bwide = 51, Bhight = 45;
@@ -70,49 +70,49 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	//level1
 	p_sin = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "sin", WS_CHILD | WS_VISIBLE, row1, level1, Bwide, Bhight, hwnd, (HMENU)ID_B_sin, hInstance, NULL);
-	p_cos = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "cos", WS_CHILD | WS_VISIBLE, row2, level1, Bwide, Bhight, hwnd, (HMENU)ID_B_cos, hInstance, NULL);
-	p_tan = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "tan", WS_CHILD | WS_VISIBLE, row3, level1, Bwide, Bhight, hwnd, (HMENU)ID_B_tan, hInstance, NULL);
-	B_pi = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "pi", WS_CHILD | WS_VISIBLE, row4, level1, Bwide, Bhight, hwnd, (HMENU)ID_B_pi, hInstance, NULL);
-	B_e = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "e", WS_CHILD | WS_VISIBLE, row5, level1, Bwide, Bhight, hwnd, (HMENU)ID_B_e, hInstance, NULL);
+	p_cos = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "cos", WS_CHILD | WS_VISIBLE, row2, level1, Bwide, Bhight, hwnd, (HMENU)ID_B_cos, hInstance, NULL);
+	p_tan = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "tan", WS_CHILD | WS_VISIBLE, row3, level1, Bwide, Bhight, hwnd, (HMENU)ID_B_tan, hInstance, NULL);
+	B_pi = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "pi", WS_CHILD | WS_VISIBLE, row4, level1, Bwide, Bhight, hwnd, (HMENU)ID_B_pi, hInstance, NULL);
+	B_e = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "e", WS_CHILD | WS_VISIBLE, row5, level1, Bwide, Bhight, hwnd, (HMENU)ID_B_e, hInstance, NULL);
 	//B_null = CreateWindowEx(WS_EX_CLIENTEDGE, "STATIC", "", WS_CHILD | WS_VISIBLE, row6, level1, Bwide, Bhight, hwnd, (HMENU)ID_B_null, hInstance, NULL);
-	BClear = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "CE", WS_CHILD | WS_VISIBLE, row7, level1, Bwide, Bhight, hwnd, (HMENU)ID_BClear, hInstance, NULL);
-	BClearAll = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "C", WS_CHILD | WS_VISIBLE, row8, level1, Bwide, Bhight, hwnd, (HMENU)ID_BClearAll, hInstance, NULL);
+	BClear = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "CE", WS_CHILD | WS_VISIBLE, row7, level1, Bwide, Bhight, hwnd, (HMENU)ID_BClear, hInstance, NULL);
+	BClearAll = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "C", WS_CHILD | WS_VISIBLE, row8, level1, Bwide, Bhight, hwnd, (HMENU)ID_BClearAll, hInstance, NULL);
 	//level2
-	B_p2 = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "x^2", WS_CHILD | WS_VISIBLE, row1, level2, Bwide, Bhight, hwnd, (HMENU)ID_B_p2, hInstance, NULL);
-	B_p1 = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "x^(-1)", WS_CHILD | WS_VISIBLE, row2, level2, Bwide, Bhight, hwnd, (HMENU)ID_B_p1, hInstance, NULL);
-	B_p = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "x^y", WS_CHILD | WS_VISIBLE, row3, level2, Bwide, Bhight, hwnd, (HMENU)ID_B_p, hInstance, NULL);
-	B_7 = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "7", WS_CHILD | WS_VISIBLE, row4, level2, Bwide, Bhight, hwnd, (HMENU)ID_B_7, hInstance, NULL);
-	B_8 = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "8", WS_CHILD | WS_VISIBLE, row5, level2, Bwide, Bhight, hwnd, (HMENU)ID_B_8, hInstance, NULL);
-	B_9 = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "9", WS_CHILD | WS_VISIBLE, row6, level2, Bwide, Bhight, hwnd, (HMENU)ID_B_9, hInstance, NULL);
-	BPlus = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "+", WS_CHILD | WS_VISIBLE, row7, level2, Bwide, Bhight, hwnd, (HMENU)ID_BPlus, hInstance, NULL);
-	BMinus = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "-", WS_CHILD | WS_VISIBLE, row8, level2, Bwide, Bhight, hwnd, (HMENU)ID_BMinus, hInstance, NULL);
+	B_p2 = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "x^2", WS_CHILD | WS_VISIBLE, row1, level2, Bwide, Bhight, hwnd, (HMENU)ID_B_p2, hInstance, NULL);
+	B_p1 = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "x^(-1)", WS_CHILD | WS_VISIBLE, row2, level2, Bwide, Bhight, hwnd, (HMENU)ID_B_p1, hInstance, NULL);
+	B_p = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "x^y", WS_CHILD | WS_VISIBLE, row3, level2, Bwide, Bhight, hwnd, (HMENU)ID_B_p, hInstance, NULL);
+	B_7 = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "7", WS_CHILD | WS_VISIBLE, row4, level2, Bwide, Bhight, hwnd, (HMENU)ID_B_7, hInstance, NULL);
+	B_8 = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "8", WS_CHILD | WS_VISIBLE, row5, level2, Bwide, Bhight, hwnd, (HMENU)ID_B_8, hInstance, NULL);
+	B_9 = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "9", WS_CHILD | WS_VISIBLE, row6, level2, Bwide, Bhight, hwnd, (HMENU)ID_B_9, hInstance, NULL);
+	BPlus = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "+", WS_CHILD | WS_VISIBLE, row7, level2, Bwide, Bhight, hwnd, (HMENU)ID_BPlus, hInstance, NULL);
+	BMinus = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "-", WS_CHILD | WS_VISIBLE, row8, level2, Bwide, Bhight, hwnd, (HMENU)ID_BMinus, hInstance, NULL);
 	//level3
-	B_fac = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "x!", WS_CHILD | WS_VISIBLE, row1, level3, Bwide, Bhight, hwnd, (HMENU)ID_B_fac, hInstance, NULL);
-	B_log = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "log", WS_CHILD | WS_VISIBLE, row2, level3, Bwide, Bhight, hwnd, (HMENU)ID_B_log, hInstance, NULL);
-	B_ln = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "ln", WS_CHILD | WS_VISIBLE, row3, level3, Bwide, Bhight, hwnd, (HMENU)ID_B_ln, hInstance, NULL);
-	B_4 = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "4", WS_CHILD | WS_VISIBLE, row4, level3, Bwide, Bhight, hwnd, (HMENU)ID_B_4, hInstance, NULL);
-	B_5 = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "5", WS_CHILD | WS_VISIBLE, row5, level3, Bwide, Bhight, hwnd, (HMENU)ID_B_5, hInstance, NULL);
-	B_6 = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "6", WS_CHILD | WS_VISIBLE, row6, level3, Bwide, Bhight, hwnd, (HMENU)ID_B_6, hInstance, NULL);
-	BMult = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "*", WS_CHILD | WS_VISIBLE, row7, level3, Bwide, Bhight, hwnd, (HMENU)ID_BMult, hInstance, NULL);
-	BDiv = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "/", WS_CHILD | WS_VISIBLE, row8, level3, Bwide, Bhight, hwnd, (HMENU)ID_BDiv, hInstance, NULL);
+	B_fac = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "x!", WS_CHILD | WS_VISIBLE, row1, level3, Bwide, Bhight, hwnd, (HMENU)ID_B_fac, hInstance, NULL);
+	B_log = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "log", WS_CHILD | WS_VISIBLE, row2, level3, Bwide, Bhight, hwnd, (HMENU)ID_B_log, hInstance, NULL);
+	B_ln = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "ln", WS_CHILD | WS_VISIBLE, row3, level3, Bwide, Bhight, hwnd, (HMENU)ID_B_ln, hInstance, NULL);
+	B_4 = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "4", WS_CHILD | WS_VISIBLE, row4, level3, Bwide, Bhight, hwnd, (HMENU)ID_B_4, hInstance, NULL);
+	B_5 = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "5", WS_CHILD | WS_VISIBLE, row5, level3, Bwide, Bhight, hwnd, (HMENU)ID_B_5, hInstance, NULL);
+	B_6 = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "6", WS_CHILD | WS_VISIBLE, row6, level3, Bwide, Bhight, hwnd, (HMENU)ID_B_6, hInstance, NULL);
+	BMult = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "*", WS_CHILD | WS_VISIBLE, row7, level3, Bwide, Bhight, hwnd, (HMENU)ID_BMult, hInstance, NULL);
+	BDiv = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "/", WS_CHILD | WS_VISIBLE, row8, level3, Bwide, Bhight, hwnd, (HMENU)ID_BDiv, hInstance, NULL);
 	//level4
 	//B_riv = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "1/x", WS_CHILD | WS_VISIBLE, row1, level4, Bwide, Bhight, hwnd, (HMENU)ID_B_riv, hInstance, NULL);
-	B_sqrt = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "sqrt", WS_CHILD | WS_VISIBLE, row2, level4, Bwide, Bhight, hwnd, (HMENU)ID_B_sqrt, hInstance, NULL);
-	B_root = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "√", WS_CHILD | WS_VISIBLE, row3, level4, Bwide, Bhight, hwnd, (HMENU)ID_B_root, hInstance, NULL);
-	B_1 = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "1", WS_CHILD | WS_VISIBLE, row4, level4, Bwide, Bhight, hwnd, (HMENU)ID_B_1, hInstance, NULL);
-	B_2 = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "2", WS_CHILD | WS_VISIBLE, row5, level4, Bwide, Bhight, hwnd, (HMENU)ID_B_2, hInstance, NULL);
-	B_3 = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "3", WS_CHILD | WS_VISIBLE, row6, level4, Bwide, Bhight, hwnd, (HMENU)ID_B_3, hInstance, NULL);
-	B_lp = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "(", WS_CHILD | WS_VISIBLE, row7, level4, Bwide, Bhight, hwnd, (HMENU)ID_B_lp, hInstance, NULL);
-	B_rp = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", ")", WS_CHILD | WS_VISIBLE, row8, level4, Bwide, Bhight, hwnd, (HMENU)ID_B_rp, hInstance, NULL);
+	B_root = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "rootX(Y)", WS_CHILD | WS_VISIBLE, row2-(0.5*Bwide), level4, 1.5*Bwide, Bhight, hwnd, (HMENU)ID_B_root, hInstance, NULL);
+	B_sqrt = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "sqrt", WS_CHILD | WS_VISIBLE, row3, level4, Bwide, Bhight, hwnd, (HMENU)ID_B_sqrt, hInstance, NULL);
+	B_1 = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "1", WS_CHILD | WS_VISIBLE, row4, level4, Bwide, Bhight, hwnd, (HMENU)ID_B_1, hInstance, NULL);
+	B_2 = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "2", WS_CHILD | WS_VISIBLE, row5, level4, Bwide, Bhight, hwnd, (HMENU)ID_B_2, hInstance, NULL);
+	B_3 = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "3", WS_CHILD | WS_VISIBLE, row6, level4, Bwide, Bhight, hwnd, (HMENU)ID_B_3, hInstance, NULL);
+	B_lp = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "(", WS_CHILD | WS_VISIBLE, row7, level4, Bwide, Bhight, hwnd, (HMENU)ID_B_lp, hInstance, NULL);
+	B_rp = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", ")", WS_CHILD | WS_VISIBLE, row8, level4, Bwide, Bhight, hwnd, (HMENU)ID_B_rp, hInstance, NULL);
 	//level5
 	//p31 = CreateWindowEx(WS_EX_CLIENTEDGE, "STATIC", "1", WS_CHILD | WS_VISIBLE, row1, level5, Bwide, Bhight, hwnd, NULL, hInstance, NULL);
 	//p32 = CreateWindowEx(WS_EX_CLIENTEDGE, "STATIC", "2", WS_CHILD | WS_VISIBLE, row2, level5, Bwide, Bhight, hwnd, NULL, hInstance, NULL);
 	//p33 = CreateWindowEx(WS_EX_CLIENTEDGE, "STATIC", "3", WS_CHILD | WS_VISIBLE, row3, level5, Bwide, Bhight, hwnd, NULL, hInstance, NULL);
-	B_0 = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "0", WS_CHILD | WS_VISIBLE, row4, level5, Bwide, Bhight, hwnd, (HMENU)ID_B_0, hInstance, NULL);
-	B_dot = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", ".", WS_CHILD | WS_VISIBLE, row5, level5, Bwide, Bhight, hwnd, (HMENU)ID_B_dot, hInstance, NULL);
-	B_10p = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "10^x", WS_CHILD | WS_VISIBLE, row6, level5, Bwide, Bhight, hwnd, (HMENU)ID_B_10p, hInstance, NULL);
-	B_Ans = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "Ans", WS_CHILD | WS_VISIBLE, row7, level5, Bwide, Bhight, hwnd, (HMENU)ID_B_Ans, hInstance, NULL);
-	BEqual = CreateWindowEx(WS_EX_CLIENTEDGE, "BUTTON", "=", WS_CHILD | WS_VISIBLE, row8, level5, Bwide, Bhight, hwnd, (HMENU)ID_BEqual, hInstance, NULL);
+	B_0 = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "0", WS_CHILD | WS_VISIBLE, row4, level5, Bwide, Bhight, hwnd, (HMENU)ID_B_0, hInstance, NULL);
+	B_dot = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", ".", WS_CHILD | WS_VISIBLE, row5, level5, Bwide, Bhight, hwnd, (HMENU)ID_B_dot, hInstance, NULL);
+	B_10p = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "10^x", WS_CHILD | WS_VISIBLE, row6, level5, Bwide, Bhight, hwnd, (HMENU)ID_B_10p, hInstance, NULL);
+	B_Ans = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "Ans", WS_CHILD | WS_VISIBLE, row7, level5, Bwide, Bhight, hwnd, (HMENU)ID_B_Ans, hInstance, NULL);
+	BEqual = CreateWindowEx(WS_EX_PALETTEWINDOW, "BUTTON", "=", WS_CHILD | WS_VISIBLE, row8, level5, Bwide, Bhight, hwnd, (HMENU)ID_BEqual, hInstance, NULL);
 	
 	// Pętla komunikatów
 	while (GetMessage(&Komunikat, NULL, 0, 0))
@@ -129,6 +129,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	std::string result,ans;
 	switch (msg)
 	{
+
 	case WM_CLOSE:
 		DestroyWindow(hwnd); break;
 	case WM_DESTROY:
@@ -151,7 +152,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		case ID_BClear:
 			LessWindowText(MainText); break;
 		case ID_BClearAll:
-			NullWindowText(MainText, ResultText); break;
+			NullWindowText(MainText); break;
 		case ID_B_0:
 			AddWindowText(MainText, "0"); break;
 		case ID_B_1:
@@ -206,7 +207,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		case ID_B_sqrt:
 			AddWindowText(MainText, "sqrt("); break;
 		case ID_B_root:
-			AddWindowText(MainText, "√"); break;
+			AddWindowText(MainText, "root"); break;
 		case ID_B_fac:
 			AddWindowText(MainText, "!"); break;
 
@@ -215,7 +216,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		switch ((int)wParam)
 		{
 		case VK_RETURN:
-			MessageBox(hwnd, "Wciśnięto Entera", "Yeah", MB_ICONINFORMATION);
+			MessageBox(hwnd, "Wciśnięto Enter", "Yeah", MB_ICONINFORMATION);
 			break;
 
 		case VK_ESCAPE:

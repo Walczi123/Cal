@@ -8,7 +8,7 @@
 
 void AddWindowText(HWND, std::string text);
 void LessWindowText(HWND);
-void NullWindowText(HWND, HWND);
+void NullWindowText(HWND);
 unsigned int priority(std::string);
 std::string read_num(std::string);
 std::deque<std::string> ONP(HWND,HWND);
@@ -17,4 +17,5 @@ std::deque<std::string> ONP(std::string, HWND);
 std::string Ans(HWND);
 double log(double, double);
 double factorial(double);
+
 

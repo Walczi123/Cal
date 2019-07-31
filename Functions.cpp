@@ -34,10 +34,9 @@ void LessWindowText(HWND h)
 	return;
 }
 
-void NullWindowText(HWND h1, HWND h2)
+void NullWindowText(HWND h1)
 {
-	if(GetWindowTextLength(h1))SetWindowText(h1, "");
-	if(GetWindowTextLength(h2))SetWindowText(h2, "");
+	if (GetWindowTextLength(h1))SetWindowText(h1, "");
 	return;
 }
 
@@ -74,12 +73,27 @@ std::string read_num(std::string text)
 	return t;
 }
 
-std::deque<std::string> ONP( HWND hwnd , HWND err)
+double nthRoot(double A, double N) //n root
+{
+	double xPre = rand() % 10;
+	double eps = 1e-6;
+	double delX = INT_MAX;
+	double xK;
+	while (delX > eps)
+	{
+		xK = ((N - 1.0) * xPre +(double)A / pow(xPre, N - 1)) / (double)N;
+		delX = abs(xK - xPre);
+		xPre = xK;
+	}
+	return xK;
+}
+
+std::deque<std::string> ONP(HWND hwnd, HWND err)
 {
 	int length = GetWindowTextLength(hwnd), i = 0, f1, f2, j;
 	LPSTR buffer = (LPSTR)GlobalAlloc(GPTR, length + 1);
 	GetWindowText(hwnd, buffer, length + 1);
-	std::string e(buffer), n1,n2;
+	std::string e(buffer), n1, n2;
 	GlobalFree(buffer);
 	std::deque<std::string> deq_str, oper, tmp;
 	if (e.length() == 0) {
@@ -244,470 +258,6 @@ std::deque<std::string> ONP( HWND hwnd , HWND err)
 													MessageBox(err, "Error - incorect dot", "Error", MB_ICONINFORMATION);
 													deq_str.push_front("ERR");
 													return deq_str;
-												}
-												else {
-													if (e[i] == 's'&&i<(e.length()-3)&&e[i+1] == 'i'&&e[i+2]=='n')
-													{
-														if(e[i + 3]=='(') 
-														{
-															e.erase(i, 3);
-															f1 = f2 = 0;
-															for (j = 0; j < e.length(); j++)
-															{
-																if (e[j] == '(')f1++;
-																if (e[j] == ')')f2++;
-																if (f1 == f2)break;
-															}
-															n1 = e;
-															if (f1>f2)j = n1.length()-1;
-															if(j!=n1.length()-1)n1.erase(j+1, n1.length() - 1);
-															if(n1!=e)e.erase(0, n1.length());
-															else e = "";
-															tmp = ONP(n1, err);
-															for (auto& t : tmp) {
-																deq_str.push_back(t);
-																tmp.pop_front();
-															}
-															deq_str.push_back("sin");
-															i = -1;
-														}
-														else {
-															e.erase(i, 3);
-															n1 = "ERR";
-															n1 = read_num(e);
-															e.erase(i, n1.length());
-															deq_str.push_back(n1);
-															deq_str.push_back("sin");
-															i = -1;
-														}
-													}
-													else {
-														if (e[i] == 'c'&&i < (e.length() - 3) && e[i + 1] == 'o'&&e[i + 2] == 's')
-														{
-															if (e[i + 3] == '(')
-															{
-																e.erase(i, 3);
-																f1 = f2 = 0;
-																for (j = 0; j < e.length(); j++)
-																{
-																	if (e[j] == '(')f1++;
-																	if (e[j] == ')')f2++;
-																	if (f1 == f2)break;
-																}
-																n1 = e;
-																if (f1 > f2)j = n1.length() - 1;
-																if (j != n1.length() - 1)n1.erase(j + 1, n1.length() - 1);
-																if (n1 != e)e.erase(0, n1.length());
-																else e = "";
-																tmp = ONP(n1, err);
-																for (auto& t : tmp) {
-																	deq_str.push_back(t);
-																	tmp.pop_front();
-																}
-																deq_str.push_back("cos");
-																i = -1;
-															}
-															else {
-																e.erase(i, 3);
-																n1 = "ERR";
-																n1 = read_num(e);
-																e.erase(i, n1.length());
-																deq_str.push_back(n1);
-																deq_str.push_back("cos");
-																i = -1;
-															}
-														}
-														else {
-															if (e[i] == 't'&&i < (e.length() - 3) && e[i + 1] == 'a'&&e[i + 2] == 'n')
-															{
-																if (e[i + 3] == '(')
-																{
-																	e.erase(i, 3);
-																	f1 = f2 = 0;
-																	for (j = 0; j < e.length(); j++)
-																	{
-																		if (e[j] == '(')f1++;
-																		if (e[j] == ')')f2++;
-																		if (f1 == f2)break;
-																	}
-																	n1 = e;
-																	if (f1 > f2)j = n1.length() - 1;
-																	if (j != n1.length() - 1)n1.erase(j + 1, n1.length() - 1);
-																	if (n1 != e)e.erase(0, n1.length());
-																	else e = "";
-																	tmp = ONP(n1, err);
-																	for (auto& t : tmp) {
-																		deq_str.push_back(t);
-																		tmp.pop_front();
-																	}
-																	deq_str.push_back("tan");
-																	i = -1;
-																}
-																else {
-																	e.erase(i, 3);
-																	n1 = "ERR";
-																	n1 = read_num(e);
-																	e.erase(i, n1.length());
-																	deq_str.push_back(n1);
-																	deq_str.push_back("tan");
-																	i = -1;
-																}
-															}
-															else {
-																if (e[i] == 'l'&&i < (e.length() - 3) && e[i + 1] == 'o'&&e[i + 2] == 'g')
-																{
-																	if (e[i + 3] == '(')
-																	{
-																		e.erase(i, 3);
-																		f1 = f2 = 0;
-																		for (j = 0; j < e.length(); j++)
-																		{
-																			if (e[j] == '(')f1++;
-																			if (e[j] == ')')f2++;
-																			if (f1 == f2)break;
-																		}
-																		n1 = e;
-																		if (f1 > f2)j = n1.length() - 1;
-																		if (j != n1.length() - 1)n1.erase(j + 1, n1.length() - 1);
-																		if (n1 != e)e.erase(0, n1.length());
-																		else e = "";
-																		tmp = ONP(n1, err);
-																		for (auto& t : tmp) {
-																			deq_str.push_back(t);
-																			tmp.pop_front();
-																		}
-																		deq_str.push_back("10");
-																		deq_str.push_back("log");
-																		i = -1;
-																	}
-																	else {
-																		e.erase(i, 3);
-																		n2 = "ERR";
-																		n2 = read_num(e);
-																		e.erase(i, n2.length());
-																		if (e[0] == '(') {
-																			f1 = f2 = 0;
-																			for (j = 0; j < e.length(); j++)
-																			{
-																				if (e[j] == '(')f1++;
-																				if (e[j] == ')')f2++;
-																				if (f1 == f2)break;
-																			}
-																			n1 = e;
-																			if (f1 > f2)j = n1.length() - 1;
-																			if (j != n1.length() - 1)n1.erase(j + 1, n1.length() - 1);
-																			if (n1 != e)e.erase(0, n1.length());
-																			else e = "";
-																			tmp = ONP(n1, err);
-																			for (auto& t : tmp) {
-																				deq_str.push_back(t);
-																				tmp.pop_front();
-																			}
-																			deq_str.push_back(n2);
-																			deq_str.push_back("log");
-																			i = -1;
-																		}
-																		else {
-																			deq_str.push_back(n2);
-																			deq_str.push_back("10");
-																			deq_str.push_back("log");
-																			i = -1;
-																		}
-																	}
-																}
-																else {
-																	if (e[i] == 'l'&&i <= (e.length() - 2) && e[i + 1] == 'n')
-																	{
-																		if (e[i + 2] == '(')
-																		{
-																			e.erase(i, 2);
-																			f1 = f2 = 0;
-																			for (j = 0; j < e.length(); j++)
-																			{
-																				if (e[j] == '(')f1++;
-																				if (e[j] == ')')f2++;
-																				if (f1 == f2)break;
-																			}
-																			n1 = e;
-																			if (f1 > f2)j = n1.length() - 1;
-																			if (j != n1.length() - 1)n1.erase(j + 1, n1.length() - 1);
-																			if (n1 != e)e.erase(0, n1.length());
-																			else e = "";
-																			tmp = ONP(n1, err);
-																			for (auto& t : tmp) {
-																				deq_str.push_back(t);
-																				tmp.pop_front();
-																			}
-																			deq_str.push_back("ln");
-																			i = -1;
-																		}
-																		else {
-																			e.erase(i, 2);
-																			n1 = "ERR";
-																			n1 = read_num(e);
-																			e.erase(i, n1.length());
-																			deq_str.push_back(n1);
-																			deq_str.push_back("ln");
-																			i = -1;
-																		}
-																	}
-																	else {
-																		if (e[i] == 'e')
-																		{
-																			deq_str.push_back(std::to_string(exp(1)));
-																			e.erase(i,1);
-																			i = -1;
-																		}
-																		else {
-																			if (e[i] == 'p'&&i <= (e.length() - 2) && e[i + 1] == 'i')
-																			{
-																				deq_str.push_back(std::to_string(PI));
-																				e.erase(i, 2);
-																				i = -1;
-																			}
-																			else {
-																				if (i < (e.length() - 5) && e[i] == 'r'&& e[i + 1] == 'o'&& e[i + 2] == 'o'&& e[i + 3] == 't')
-																				{
-																					e.erase(i, 4);
-																					n2 = "ERR";
-																					n2 = read_num(e);
-																					e.erase(i, n2.length());
-																					if (e[0] == '(') {
-																						f1 = f2 = 0;
-																						for (j = 0; j < e.length(); j++)
-																						{
-																							if (e[j] == '(')f1++;
-																							if (e[j] == ')')f2++;
-																							if (f1 == f2)break;
-																						}
-																						n1 = e;
-																						if (f1 > f2)j = n1.length() - 1;
-																						if (j != n1.length() - 1)n1.erase(j + 1, n1.length() - 1);
-																						if (n1 != e)e.erase(0, n1.length());
-																						else e = "";
-																						tmp = ONP(n1, err);
-																						for (auto& t : tmp) {
-																							deq_str.push_back(t);
-																							tmp.pop_front();
-																						}
-																						deq_str.push_back(std::to_string(1 / stod(n2)));
-																						deq_str.push_back("^");
-																						i = -1;
-																					}
-																					else {
-																						std::string s = "Error - root is undefined \" " + e[i]; s += " \" ";
-																						MessageBox(err, s.c_str(), "Error - root", MB_ICONINFORMATION);
-																						deq_str.push_front("ERR");
-																						return deq_str;
-																					}
-																				}
-																				else {
-																					if (e[i]='!')
-																					{
-																						deq_str.push_back("!");
-																						e.erase(i, 1);
-																						i = -1;
-																					}
-																					else {
-																						std::string s = "Error - operator is undefined \" " + e[i]; s += " \" ";
-																						MessageBox(err, s.c_str(), "Error - operator", MB_ICONINFORMATION);
-																						deq_str.push_front("ERR");
-																						e.erase(i, 1);
-																						return deq_str;
-																					}
-																				}
-																			}
-																		}
-																	}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-	for (auto& op : oper) {
-		if(op!="(")deq_str.push_back(op);
-		oper.pop_front();
-	}
-	return deq_str;
-};
-
-std::deque<std::string> ONP(std::string e, HWND err)
-{
-	int i = 0,f1,f2,j;
-	std::string n1,n2;
-	std::deque<std::string> deq_str, oper, tmp;
-	if (e.length() == 0) {
-		std::string s = "Error - there is no number to compute";
-		MessageBox(err, s.c_str(), "Error - no number", MB_ICONINFORMATION);
-		deq_str.push_front("ERR");
-		return deq_str;
-	}
-	if (e[0] == '-')
-	{
-		e.erase(0, 1);
-		n1 = "ERR";
-		n1 = "-" + read_num(e);
-		if (!n1.empty())deq_str.push_back(n1);
-		e.erase(i, n1.length());
-	}
-	for (; e.length() > 0; i++)
-	{
-		if (e[i] == ' ') {
-			e.erase(i, 1);
-			i = -1;
-		}
-		else {
-			if (isdigit(e[i])) {
-				n1 = "ERR";
-				n1 = read_num(e);
-				if (!n1.empty())deq_str.push_back(n1);
-				e.erase(i, n1.length());
-				i = -1;
-			}
-			else {
-				if (e[i] == '('&& e[i + 1] == '-')
-				{
-					e.erase(i, 2);
-					n1 = "ERR";
-					n1 = "-" + read_num(e);
-					if (!n1.empty())deq_str.push_back(n1);
-					e.erase(i, n1.length());
-					i = -1;
-				}
-				else {
-					if (e[i] == '(') {
-						oper.push_front("("); // std::to_string(e[i])=ASCII('('); the function cannot be used here;
-						e.erase(i, 1);
-						i = -1;
-					}
-					else {
-						if (e[i] == '+') {
-							if (oper.empty() || priority("+") > priority(oper.front())) { oper.push_front("+"); } // std::to_string(e[i])=43; the function cannot be used here;
-							else {
-								for (std::string op : oper) {
-									if (priority(op) >= priority("+"))
-									{
-										deq_str.push_back(op);
-										oper.pop_front();
-									}
-									else { break; }
-								}
-								oper.push_front("+");
-							}
-							e.erase(i, 1);
-							i = -1;
-						}
-						else {
-							if (e[i] == '-')
-							{
-								if (oper.empty() || priority("-") > priority(oper.front())) { oper.push_front("-"); }
-								else {
-									for (auto& op : oper) {
-										if (priority(op) >= priority("-"))
-										{
-											deq_str.push_back(op);
-											oper.pop_front();
-										}
-										else { break; }
-									}
-									oper.push_front("-");
-								}
-								e.erase(i, 1);
-								i = -1;
-							}
-							else {
-								if (e[i] == ')')
-								{
-									for (auto& op : oper) {
-										if (op != "(")
-										{
-											deq_str.push_back(op);
-											oper.pop_front();
-										}
-										else
-										{
-											oper.pop_front();
-											break;
-										}
-									}
-									e.erase(i, 1);
-									i = -1;
-								}
-								else {
-									if (e[i] == '*')
-									{
-										if (oper.empty() || priority("*") > priority(oper.front())) { oper.push_front("*"); }
-										else {
-											for (auto& op : oper) {
-												if (priority(op) >= priority("*"))
-												{
-													deq_str.push_back(op);
-													oper.pop_front();
-												}
-												else { break; }
-											}
-											oper.push_front("*");
-										}
-										e.erase(i, 1);
-										i = -1;
-									}
-									else {
-										if (e[i] == '/')
-										{
-											if ((oper.empty() || priority("/") > priority(oper.front()))) { oper.push_front("/"); }
-											else {
-												for (auto& op : oper) {
-													if (priority(op) >= priority("/"))
-													{
-														deq_str.push_back(op);
-														oper.pop_front();
-													}
-													else { break; }
-												}
-												oper.push_front("/");
-											}
-											e.erase(i, 1);
-											i = -1;
-										}
-										else {
-											if (e[i] == '^')
-											{
-												if ((oper.empty() || priority("^") > priority(oper.front()))) { oper.push_front("^"); }
-												else {
-													for (auto& op : oper) {
-														if (priority(op) >= priority("^"))
-														{
-															deq_str.push_back(op);
-															oper.pop_front();
-														}
-														else { break; }
-													}
-													oper.push_front("^");
-												}
-												e.erase(i, 1);
-												i = -1;
-											}
-											else {
-												if (e[i] == '.')
-												{
-													e.erase(i, 1);
-													n1 = "ERR";
-													n1 = read_num(e);
-													e.erase(i, n1.length());
-													deq_str.push_back("ERR");
-													MessageBox(err, "Error - incorect dot", "Error", MB_ICONINFORMATION);
-													i = -1;
 												}
 												else {
 													if (e[i] == 's'&&i < (e.length() - 3) && e[i + 1] == 'i'&&e[i + 2] == 'n')
@@ -954,30 +504,69 @@ std::deque<std::string> ONP(std::string e, HWND err)
 																							deq_str.push_back(t);
 																							tmp.pop_front();
 																						}
-																						deq_str.push_back(std::to_string(1 / stod(n2)));
-																						deq_str.push_back("^");
+																						deq_str.push_back(std::to_string(stod(n2)));
+																						deq_str.push_back("r");
 																						i = -1;
 																					}
 																					else {
-																						std::string s = "Error - root is undefined \" " + e[i]; s += " \" ";
+																						std::string s = "Error - root is undefined";s=s+" \" " + e[i] + " \" ";
 																						MessageBox(err, s.c_str(), "Error - root", MB_ICONINFORMATION);
 																						deq_str.push_front("ERR");
 																						return deq_str;
 																					}
 																				}
 																				else {
-																					if (e[i] = '!')
+																					if (i < (e.length() - 5) && e[i] == 's'&& e[i + 1] == 'q'&& e[i + 2] == 'r'&& e[i + 3] == 't')
 																					{
-																						deq_str.push_back("!");
-																						e.erase(i, 1);
-																						i = -1;
+																						e.erase(i, 3);
+																						n2 = "ERR";
+																						n2 = read_num(e);
+																						e.erase(i, n2.length());
+																						if (e[0] == '(') {
+																							f1 = f2 = 0;
+																							for (j = 0; j < e.length(); j++)
+																							{
+																								if (e[j] == '(')f1++;
+																								if (e[j] == ')')f2++;
+																								if (f1 == f2)break;
+																							}
+																							n1 = e;
+																							if (f1 > f2)j = n1.length() - 1;
+																							if (j != n1.length() - 1)n1.erase(j + 1, n1.length() - 1);
+																							if (n1 != e)e.erase(0, n1.length());
+																							else e = "";
+																							tmp = ONP(n1, err);
+																							for (auto& t : tmp) {
+																								deq_str.push_back(t);
+																								tmp.pop_front();
+																							}
+																							deq_str.push_back(std::to_string(2));
+																							deq_str.push_back("r");
+																							i = -1;
+																						}
+																						else {
+																							std::string s = "Error - square root is undefined";
+																							s= s+" \" " + e[i] + " \" ";
+																							MessageBox(err, s.c_str(), "Error - sqrt", MB_ICONINFORMATION);
+																							deq_str.push_front("ERR");
+																							return deq_str;
+																						}
 																					}
 																					else {
-																						std::string s = "Error - operator is undefined \" " + e[i]; s += " \" ";
-																						MessageBox(err, s.c_str(), "Error - operator", MB_ICONINFORMATION);
-																						deq_str.push_front("ERR");
-																						e.erase(i, 1);
-																						return deq_str;
+																						if (e[i] == '!')
+																						{
+																							deq_str.push_back("!");
+																							e.erase(i, 1);
+																							i = -1;
+																						}
+																						else {
+																							std::string s = "Error - operator is undefined";
+																							s = s + " \" " + e[i] + " \" ";
+																							MessageBox(err, s.c_str(), "Error - operator", MB_ICONINFORMATION);
+																							deq_str.push_front("ERR");
+																							e.erase(i, 1);
+																							return deq_str;
+																						}
 																					}
 																				}
 																			}
@@ -1006,46 +595,570 @@ std::deque<std::string> ONP(std::string e, HWND err)
 	return deq_str;
 };
 
-std::string Result (std::deque<std::string> deq_str, HWND err)
+std::deque<std::string> ONP(std::string e, HWND err)
 {
-	double part;
-	std::deque<std::string>::iterator it = deq_str.begin();
-	while (deq_str.size() != 1)
+	int i = 0, f1, f2, j;
+	std::string n1, n2;
+	std::deque<std::string> deq_str, oper, tmp;
+	if (e.length() == 0) {
+		std::string s = "Error - there is no number to compute";
+		MessageBox(err, s.c_str(), "Error - no number", MB_ICONINFORMATION);
+		deq_str.push_front("ERR");
+		return deq_str;
+	}
+	if (e[0] == '-')
 	{
-		if (*it == "ERR")
-		{
-			MessageBox(err, "Error Result", "Error", MB_ICONINFORMATION);
-			return "Error res";
+		e.erase(0, 1);
+		n1 = "ERR";
+		n1 = "-" + read_num(e);
+		if (!n1.empty())deq_str.push_back(n1);
+		e.erase(i, n1.length());
+	}
+	for (; e.length() > 0; i++)
+	{
+		if (e[i] == ' ') {
+			e.erase(i, 1);
+			i = -1;
 		}
 		else {
-			if (*it == "+")
-			{
+			if (isdigit(e[i])) {
+				n1 = "ERR";
+				n1 = read_num(e);
+				if (!n1.empty())deq_str.push_back(n1);
+				e.erase(i, n1.length());
+				i = -1;
+			}
+			else {
+				if (e[i] == '('&& e[i + 1] == '-')
+				{
+					e.erase(i, 2);
+					n1 = "ERR";
+					n1 = "-" + read_num(e);
+					if (!n1.empty())deq_str.push_back(n1);
+					e.erase(i, n1.length());
+					i = -1;
+				}
+				else {
+					if (e[i] == '(') {
+						oper.push_front("("); // std::to_string(e[i])=ASCII('('); the function cannot be used here;
+						e.erase(i, 1);
+						i = -1;
+					}
+					else {
+						if (e[i] == '+') {
+							if (oper.empty() || priority("+") > priority(oper.front())) { oper.push_front("+"); } // std::to_string(e[i])=43; the function cannot be used here;
+							else {
+								for (std::string op : oper) {
+									if (priority(op) >= priority("+"))
+									{
+										deq_str.push_back(op);
+										oper.pop_front();
+									}
+									else { break; }
+								}
+								oper.push_front("+");
+							}
+							e.erase(i, 1);
+							i = -1;
+						}
+						else {
+							if (e[i] == '-')
+							{
+								if (oper.empty() || priority("-") > priority(oper.front())) { oper.push_front("-"); }
+								else {
+									for (auto& op : oper) {
+										if (priority(op) >= priority("-"))
+										{
+											deq_str.push_back(op);
+											oper.pop_front();
+										}
+										else { break; }
+									}
+									oper.push_front("-");
+								}
+								e.erase(i, 1);
+								i = -1;
+							}
+							else {
+								if (e[i] == ')')
+								{
+									for (auto& op : oper) {
+										if (op != "(")
+										{
+											deq_str.push_back(op);
+											oper.pop_front();
+										}
+										else
+										{
+											oper.pop_front();
+											break;
+										}
+									}
+									e.erase(i, 1);
+									i = -1;
+								}
+								else {
+									if (e[i] == '*')
+									{
+										if (oper.empty() || priority("*") > priority(oper.front())) { oper.push_front("*"); }
+										else {
+											for (auto& op : oper) {
+												if (priority(op) >= priority("*"))
+												{
+													deq_str.push_back(op);
+													oper.pop_front();
+												}
+												else { break; }
+											}
+											oper.push_front("*");
+										}
+										e.erase(i, 1);
+										i = -1;
+									}
+									else {
+										if (e[i] == '/')
+										{
+											if ((oper.empty() || priority("/") > priority(oper.front()))) { oper.push_front("/"); }
+											else {
+												for (auto& op : oper) {
+													if (priority(op) >= priority("/"))
+													{
+														deq_str.push_back(op);
+														oper.pop_front();
+													}
+													else { break; }
+												}
+												oper.push_front("/");
+											}
+											e.erase(i, 1);
+											i = -1;
+										}
+										else {
+											if (e[i] == '^')
+											{
+												if ((oper.empty() || priority("^") > priority(oper.front()))) { oper.push_front("^"); }
+												else {
+													for (auto& op : oper) {
+														if (priority(op) >= priority("^"))
+														{
+															deq_str.push_back(op);
+															oper.pop_front();
+														}
+														else { break; }
+													}
+													oper.push_front("^");
+												}
+												e.erase(i, 1);
+												i = -1;
+											}
+											else {
+												if (e[i] == '.')
+												{
+													e.erase(i, 1);
+													n1 = "ERR";
+													n1 = read_num(e);
+													e.erase(i, n1.length());
+													deq_str.push_back("ERR");
+													MessageBox(err, "Error - incorect dot", "Error", MB_ICONINFORMATION);
+													deq_str.push_front("ERR");
+													return deq_str;
+												}
+												else {
+													if (e[i] == 's'&&i < (e.length() - 3) && e[i + 1] == 'i'&&e[i + 2] == 'n')
+													{
+														if (e[i + 3] == '(')
+														{
+															e.erase(i, 3);
+															f1 = f2 = 0;
+															for (j = 0; j < e.length(); j++)
+															{
+																if (e[j] == '(')f1++;
+																if (e[j] == ')')f2++;
+																if (f1 == f2)break;
+															}
+															n1 = e;
+															if (f1 > f2)j = n1.length() - 1;
+															if (j != n1.length() - 1)n1.erase(j + 1, n1.length() - 1);
+															if (n1 != e)e.erase(0, n1.length());
+															else e = "";
+															tmp = ONP(n1, err);
+															for (auto& t : tmp) {
+																deq_str.push_back(t);
+																tmp.pop_front();
+															}
+															deq_str.push_back("sin");
+															i = -1;
+														}
+														else {
+															e.erase(i, 3);
+															n1 = "ERR";
+															n1 = read_num(e);
+															e.erase(i, n1.length());
+															deq_str.push_back(n1);
+															deq_str.push_back("sin");
+															i = -1;
+														}
+													}
+													else {
+														if (e[i] == 'c'&&i < (e.length() - 3) && e[i + 1] == 'o'&&e[i + 2] == 's')
+														{
+															if (e[i + 3] == '(')
+															{
+																e.erase(i, 3);
+																f1 = f2 = 0;
+																for (j = 0; j < e.length(); j++)
+																{
+																	if (e[j] == '(')f1++;
+																	if (e[j] == ')')f2++;
+																	if (f1 == f2)break;
+																}
+																n1 = e;
+																if (f1 > f2)j = n1.length() - 1;
+																if (j != n1.length() - 1)n1.erase(j + 1, n1.length() - 1);
+																if (n1 != e)e.erase(0, n1.length());
+																else e = "";
+																tmp = ONP(n1, err);
+																for (auto& t : tmp) {
+																	deq_str.push_back(t);
+																	tmp.pop_front();
+																}
+																deq_str.push_back("cos");
+																i = -1;
+															}
+															else {
+																e.erase(i, 3);
+																n1 = "ERR";
+																n1 = read_num(e);
+																e.erase(i, n1.length());
+																deq_str.push_back(n1);
+																deq_str.push_back("cos");
+																i = -1;
+															}
+														}
+														else {
+															if (e[i] == 't'&&i < (e.length() - 3) && e[i + 1] == 'a'&&e[i + 2] == 'n')
+															{
+																if (e[i + 3] == '(')
+																{
+																	e.erase(i, 3);
+																	f1 = f2 = 0;
+																	for (j = 0; j < e.length(); j++)
+																	{
+																		if (e[j] == '(')f1++;
+																		if (e[j] == ')')f2++;
+																		if (f1 == f2)break;
+																	}
+																	n1 = e;
+																	if (f1 > f2)j = n1.length() - 1;
+																	if (j != n1.length() - 1)n1.erase(j + 1, n1.length() - 1);
+																	if (n1 != e)e.erase(0, n1.length());
+																	else e = "";
+																	tmp = ONP(n1, err);
+																	for (auto& t : tmp) {
+																		deq_str.push_back(t);
+																		tmp.pop_front();
+																	}
+																	deq_str.push_back("tan");
+																	i = -1;
+																}
+																else {
+																	e.erase(i, 3);
+																	n1 = "ERR";
+																	n1 = read_num(e);
+																	e.erase(i, n1.length());
+																	deq_str.push_back(n1);
+																	deq_str.push_back("tan");
+																	i = -1;
+																}
+															}
+															else {
+																if (e[i] == 'l'&&i < (e.length() - 3) && e[i + 1] == 'o'&&e[i + 2] == 'g')
+																{
+																	if (e[i + 3] == '(')
+																	{
+																		e.erase(i, 3);
+																		f1 = f2 = 0;
+																		for (j = 0; j < e.length(); j++)
+																		{
+																			if (e[j] == '(')f1++;
+																			if (e[j] == ')')f2++;
+																			if (f1 == f2)break;
+																		}
+																		n1 = e;
+																		if (f1 > f2)j = n1.length() - 1;
+																		if (j != n1.length() - 1)n1.erase(j + 1, n1.length() - 1);
+																		if (n1 != e)e.erase(0, n1.length());
+																		else e = "";
+																		tmp = ONP(n1, err);
+																		for (auto& t : tmp) {
+																			deq_str.push_back(t);
+																			tmp.pop_front();
+																		}
+																		deq_str.push_back("10");
+																		deq_str.push_back("log");
+																		i = -1;
+																	}
+																	else {
+																		e.erase(i, 3);
+																		n2 = "ERR";
+																		n2 = read_num(e);
+																		e.erase(i, n2.length());
+																		if (e[0] == '(') {
+																			f1 = f2 = 0;
+																			for (j = 0; j < e.length(); j++)
+																			{
+																				if (e[j] == '(')f1++;
+																				if (e[j] == ')')f2++;
+																				if (f1 == f2)break;
+																			}
+																			n1 = e;
+																			if (f1 > f2)j = n1.length() - 1;
+																			if (j != n1.length() - 1)n1.erase(j + 1, n1.length() - 1);
+																			if (n1 != e)e.erase(0, n1.length());
+																			else e = "";
+																			tmp = ONP(n1, err);
+																			for (auto& t : tmp) {
+																				deq_str.push_back(t);
+																				tmp.pop_front();
+																			}
+																			deq_str.push_back(n2);
+																			deq_str.push_back("log");
+																			i = -1;
+																		}
+																		else {
+																			deq_str.push_back(n2);
+																			deq_str.push_back("10");
+																			deq_str.push_back("log");
+																			i = -1;
+																		}
+																	}
+																}
+																else {
+																	if (e[i] == 'l'&&i <= (e.length() - 2) && e[i + 1] == 'n')
+																	{
+																		if (e[i + 2] == '(')
+																		{
+																			e.erase(i, 2);
+																			f1 = f2 = 0;
+																			for (j = 0; j < e.length(); j++)
+																			{
+																				if (e[j] == '(')f1++;
+																				if (e[j] == ')')f2++;
+																				if (f1 == f2)break;
+																			}
+																			n1 = e;
+																			if (f1 > f2)j = n1.length() - 1;
+																			if (j != n1.length() - 1)n1.erase(j + 1, n1.length() - 1);
+																			if (n1 != e)e.erase(0, n1.length());
+																			else e = "";
+																			tmp = ONP(n1, err);
+																			for (auto& t : tmp) {
+																				deq_str.push_back(t);
+																				tmp.pop_front();
+																			}
+																			deq_str.push_back("ln");
+																			i = -1;
+																		}
+																		else {
+																			e.erase(i, 2);
+																			n1 = "ERR";
+																			n1 = read_num(e);
+																			e.erase(i, n1.length());
+																			deq_str.push_back(n1);
+																			deq_str.push_back("ln");
+																			i = -1;
+																		}
+																	}
+																	else {
+																		if (e[i] == 'e')
+																		{
+																			deq_str.push_back(std::to_string(exp(1)));
+																			e.erase(i, 1);
+																			i = -1;
+																		}
+																		else {
+																			if (e[i] == 'p'&&i <= (e.length() - 2) && e[i + 1] == 'i')
+																			{
+																				deq_str.push_back(std::to_string(PI));
+																				e.erase(i, 2);
+																				i = -1;
+																			}
+																			else {
+																				if (i < (e.length() - 5) && e[i] == 'r'&& e[i + 1] == 'o'&& e[i + 2] == 'o'&& e[i + 3] == 't')
+																				{
+																					e.erase(i, 4);
+																					n2 = "ERR";
+																					n2 = read_num(e);
+																					e.erase(i, n2.length());
+																					if (e[0] == '(') {
+																						f1 = f2 = 0;
+																						for (j = 0; j < e.length(); j++)
+																						{
+																							if (e[j] == '(')f1++;
+																							if (e[j] == ')')f2++;
+																							if (f1 == f2)break;
+																						}
+																						n1 = e;
+																						if (f1 > f2)j = n1.length() - 1;
+																						if (j != n1.length() - 1)n1.erase(j + 1, n1.length() - 1);
+																						if (n1 != e)e.erase(0, n1.length());
+																						else e = "";
+																						tmp = ONP(n1, err);
+																						for (auto& t : tmp) {
+																							deq_str.push_back(t);
+																							tmp.pop_front();
+																						}
+																						deq_str.push_back(std::to_string(stod(n2)));
+																						deq_str.push_back("r");
+																						i = -1;
+																					}
+																					else {
+																						std::string s = "Error - root is undefined"; s = s + " \" " + e[i] + " \" ";
+																						MessageBox(err, s.c_str(), "Error - root", MB_ICONINFORMATION);
+																						deq_str.push_front("ERR");
+																						return deq_str;
+																					}
+																				}
+																				else {
+																					if (i < (e.length() - 5) && e[i] == 's'&& e[i + 1] == 'q'&& e[i + 2] == 'r'&& e[i + 3] == 't')
+																					{
+																						e.erase(i, 3);
+																						n2 = "ERR";
+																						n2 = read_num(e);
+																						e.erase(i, n2.length());
+																						if (e[0] == '(') {
+																							f1 = f2 = 0;
+																							for (j = 0; j < e.length(); j++)
+																							{
+																								if (e[j] == '(')f1++;
+																								if (e[j] == ')')f2++;
+																								if (f1 == f2)break;
+																							}
+																							n1 = e;
+																							if (f1 > f2)j = n1.length() - 1;
+																							if (j != n1.length() - 1)n1.erase(j + 1, n1.length() - 1);
+																							if (n1 != e)e.erase(0, n1.length());
+																							else e = "";
+																							tmp = ONP(n1, err);
+																							for (auto& t : tmp) {
+																								deq_str.push_back(t);
+																								tmp.pop_front();
+																							}
+																							deq_str.push_back(std::to_string(2));
+																							deq_str.push_back("r");
+																							i = -1;
+																						}
+																						else {
+																							std::string s = "Error - square root is undefined";
+																							s = s + " \" " + e[i] + " \" ";
+																							MessageBox(err, s.c_str(), "Error - sqrt", MB_ICONINFORMATION);
+																							deq_str.push_front("ERR");
+																							return deq_str;
+																						}
+																					}
+																					else {
+																						if (e[i] == '!')
+																						{
+																							deq_str.push_back("!");
+																							e.erase(i, 1);
+																							i = -1;
+																						}
+																						else {
+																							std::string s = "Error - operator is undefined";
+																							s = s + " \" " + e[i] + " \" ";
+																							MessageBox(err, s.c_str(), "Error - operator", MB_ICONINFORMATION);
+																							deq_str.push_front("ERR");
+																							e.erase(i, 1);
+																							return deq_str;
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	for (auto& op : oper) {
+		if (op != "(")deq_str.push_back(op);
+		oper.pop_front();
+	}
+	return deq_str;
+};
+
+std::string Result(std::deque<std::string> deq_str, HWND err) {
+	double part;
+	std::deque<std::string>::iterator it = deq_str.begin();
+	for (const auto& d : deq_str)
+	{
+		if (d == "ERR")
+		{
+			MessageBox(err, "Incorect Data", "Error Result", MB_ICONINFORMATION);
+			return "Error res";
+		}
+	}
+	while (it != deq_str.end())
+	{
+		if (*it == "+")
+		{
+			if (deq_str.size() > 2) {
 				part = stod(*(it - 2)) + stod(*(it - 1));
 				*(it - 2) = std::to_string(part);
 				deq_str.erase(it - 1, it + 1);
 				it = deq_str.begin();
 			}
 			else {
-				if (*it == "-")
-				{
+				MessageBox(err, "Sumation have no components", "Error Result", MB_ICONINFORMATION);
+				return "Error - res";
+			}
+		}
+		else {
+			if (*it == "-")
+			{
+				if (deq_str.size() > 2) {
 					part = stod(*(it - 2)) - stod(*(it - 1));
 					*(it - 2) = std::to_string(part);
 					deq_str.erase(it - 1, it + 1);
 					it = deq_str.begin();
 				}
 				else {
-					if (*it == "*")
-					{
+					MessageBox(err, "Substraction have no components", "Error Result", MB_ICONINFORMATION);
+					return "Error res";
+				}
+			}
+			else {
+				if (*it == "*")
+				{
+					if (deq_str.size() > 2) {
 						part = stod(*(it - 2)) * stod(*(it - 1));
 						*(it - 2) = std::to_string(part);
 						deq_str.erase(it - 1, it + 1);
 						it = deq_str.begin();
 					}
 					else {
-						if (*it == "/")
-						{
-							if (stod(*(it - 1)) == 0.0) 
-							{ 
+						MessageBox(err, "Multiplication have no components", "Error Result", MB_ICONINFORMATION);
+						return "Error - res";
+					}
+				}
+				else {
+					if (*it == "/")
+					{
+						if (deq_str.size() > 2) {
+							if (stod(*(it - 1)) == 0.0)
+							{
 								MessageBox(err, "Error Result", "Divided by 0", MB_ICONINFORMATION);
 								return "Error div by 0";
 							}
@@ -1055,60 +1168,121 @@ std::string Result (std::deque<std::string> deq_str, HWND err)
 							it = deq_str.begin();
 						}
 						else {
-							if (*it == "^")
-							{
+							MessageBox(err, "Error Result", "Division have no components", MB_ICONINFORMATION);
+							return "Error - res";
+						}
+					}
+					else {
+						if (*it == "^")
+						{
+							if (deq_str.size() > 2) {
 								part = pow(stod(*(it - 2)), stod(*(it - 1)));
 								*(it - 2) = std::to_string(part);
 								deq_str.erase(it - 1, it + 1);
 								it = deq_str.begin();
 							}
 							else {
-								if (*it == "sin")
-								{
-									part = sin(stod(*(it - 1)));
-									*(it - 1) = std::to_string(part);
-									deq_str.erase(it);
+								MessageBox(err, "Exponental function have no components", "Error Result", MB_ICONINFORMATION);
+								return "Error - res";
+							}
+						}
+						else {
+							if (*it == "r")
+							{
+								if (deq_str.size() > 2) {
+									part = nthRoot(stod(*(it - 2)), stod(*(it - 1)));
+									*(it - 2) = std::to_string(part);
+									deq_str.erase(it - 1, it + 1);
 									it = deq_str.begin();
 								}
 								else {
-									if (*it == "cos")
-									{
-										part = cos(stod(*(it - 1)));
+									MessageBox(err, "Exponental function have no components", "Error Result", MB_ICONINFORMATION);
+									return "Error - res";
+								}
+							}
+							else {
+								if (*it == "sin")
+								{
+									if (deq_str.size() > 1) {
+										part = sin(stod(*(it - 1)));
 										*(it - 1) = std::to_string(part);
 										deq_str.erase(it);
 										it = deq_str.begin();
 									}
 									else {
-										if (*it == "tan")
-										{
-											part = tan(stod(*(it - 1)));
+										MessageBox(err, "Sinus function have no components", "Error Result", MB_ICONINFORMATION);
+										return "Error - res";
+									}
+								}
+								else {
+									if (*it == "cos")
+									{
+										if (deq_str.size() > 1) {
+											part = cos(stod(*(it - 1)));
 											*(it - 1) = std::to_string(part);
 											deq_str.erase(it);
 											it = deq_str.begin();
 										}
 										else {
+											MessageBox(err, "Cosinus function have no components", "Error Result", MB_ICONINFORMATION);
+											return "Error - res";
+										}
+									}
+									else {
+										if (*it == "tan")
+										{
+											if (deq_str.size() > 1) {
+												part = tan(stod(*(it - 1)));
+												*(it - 1) = std::to_string(part);
+												deq_str.erase(it);
+												it = deq_str.begin();
+											}
+											else {
+												MessageBox(err, "Tanges function have no components", "Error Result", MB_ICONINFORMATION);
+												return "Error - res";
+											}
+										}
+										else {
 											if (*it == "log")
 											{
-												part = log(stod(*(it - 1)), stod(*(it - 2)));
-												*(it - 2) = std::to_string(part);
-												deq_str.erase(it - 1, it + 1);
-												it = deq_str.begin();
+												if (deq_str.size() > 2) {
+													part = log(stod(*(it - 1)), stod(*(it - 2)));
+													*(it - 2) = std::to_string(part);
+													deq_str.erase(it - 1, it + 1);
+													it = deq_str.begin();
+												}
+												else {
+													MessageBox(err, "Logarithm function have no components", "Error Result", MB_ICONINFORMATION);
+													return "Error - res";
+												}
 											}
 											else {
 												if (*it == "ln")
 												{
-													part = log(exp(1), stod(*(it - 1)));
-													*(it - 1) = std::to_string(part);
-													deq_str.erase(it);
-													it = deq_str.begin();
+													if (deq_str.size() > 1) {
+														part = log(exp(1), stod(*(it - 1)));
+														*(it - 1) = std::to_string(part);
+														deq_str.erase(it);
+														it = deq_str.begin();
+													}
+													else {
+														MessageBox(err, "Natural logarithm function have no components", "Error Result", MB_ICONINFORMATION);
+														return "Error - res";
+													}
 												}
 												else {
 													if (*it == "!")
 													{
-														part = factorial(stod(*(it - 1)));
-														*(it - 1) = std::to_string(part);
-														deq_str.erase(it);
-														it = deq_str.begin();
+														if (deq_str.size() > 1) {
+															part = factorial(stod(*(it - 1)));
+															*(it - 1) = std::to_string(part);
+															deq_str.erase(it);
+															it = deq_str.begin();
+														}
+														else {
+															MessageBox(err, "Factorial function have no components", "Error Result", MB_ICONINFORMATION);
+															return "Error - res";
+														}
 													}
 												}
 											}
@@ -1123,13 +1297,17 @@ std::string Result (std::deque<std::string> deq_str, HWND err)
 		}
 		it++;
 	}
-	while(true)
+	while (((deq_str.size() != 0)) && ((*deq_str.begin()) != ""))
 	{
 		if ((*deq_str.begin())[(*deq_str.begin()).length() - 1] == '.') { (*deq_str.begin()).erase((*deq_str.begin()).length() - 1); break; }
 		if ((*deq_str.begin())[(*deq_str.begin()).length() - 1] == '0')(*deq_str.begin()).erase((*deq_str.begin()).length() - 1);
 		else break;
 	}
-	return *deq_str.begin();
+	if ((deq_str.size() != 0))return *deq_str.begin();
+	else {
+		deq_str.push_front("Not a value");
+		return *deq_str.begin();
+	}
 };
 
 std::string Ans(HWND hwnd)
